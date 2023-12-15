@@ -17,7 +17,7 @@
 				{
 					href: "/dashboard",
 					icon: faChartLine,
-					label: "Dashboard",
+					label: "Главная",
 				},
 				{
 					href: "/settings",
@@ -35,12 +35,12 @@
 				{
 					href: "/login",
 					icon: faSignIn,
-					label: "Log In",
+					label: "Залогиниться",
 				},
 				{
 					href: "/signup",
 					icon: faHeart,
-					label: "Sign Up",
+					label: "Регистрация",
 				},
 		  ];
 </script>
@@ -50,14 +50,14 @@
 		<h1>
 			<a href="/" class="btn btn-ghost gap-3">
 				<Fa icon={faRocket} />
-				SvelteKit Auth
+				IDS
 			</a>
 		</h1>
 
 		<nav class="dropdown dropdown-end ml-auto">
 			<label tabindex="0" class="btn btn-ghost gap-3">
 				<Fa icon={faBars} />
-				Menu
+				Меню
 			</label>
 			<ul
 				tabindex="0"

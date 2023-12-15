@@ -15,12 +15,6 @@
 </script>
 
 <section class="max-w-sm mx-auto">
-	<div class="prose">
-		<h1 class="">Log In</h1>
-		<p>
-			Use email <code>a@b.com</code> and password <code>asdfasdf</code> to login.
-		</p>
-	</div>
 	<form
 		class="flex flex-col gap-6 my-6"
 		method="POST"
@@ -71,16 +65,9 @@
 			/>
 		</p>
 		<p class="flex items-center gap-6 mt-6">
-			<button class="btn btn-primary">Log In</button>
-			or
-			<a href="/signup" class="link">Sign Up</a>
+			<button class="btn btn-primary">Залогиниться</button>
+			или
+			<a href="/signup" class="link">Зарегестрироваться</a>
 		</p>
 	</form>
-
-	{#if form}
-		<section class="my-12 prose">
-			<h3>Form data:</h3>
-			<pre>{JSON.stringify(form, null, 2)}</pre>
-		</section>
-	{/if}
 </section>

@@ -3,26 +3,12 @@
 </script>
 
 <div class="prose">
-	<h1>SvelteKit Auth Example</h1>
+	<h1>Фронт для IDS на SvelteKit</h1>
 	<p>
-		This project shows you how to implement a simple authentication system using
-		SvelteKit.
+		Отображает данные о пакетах и сигнатуры которыми они совпали
 	</p>
 	<p>
-		<a
-			href="https://github.com/danawoodman/sveltekit-auth-example"
-			target="_blank"
-			rel="noopen">Checkout the source code here</a
-		>.
-	</p>
-	<p>
-		This demo doesn't use a database and instead just stores user data in a
-		server-side cookie. This is just for demo purposes. In your application
-		you'd want to connect to some backend system instead.
-	</p>
-	<p>
-		Try signing up, loggin out, then logging in with that same user credentials
-		then try and API request.
+		Зарегестрируйтесь или залогиньтесь чтобы просмотреть инфу
 	</p>
 	<p class="flex items-center gap-4 mt-12">
 		{#if $session?.user}

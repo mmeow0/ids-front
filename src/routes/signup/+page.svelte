@@ -14,7 +14,7 @@
 
 <section class="max-w-sm mx-auto">
 	<div class="prose">
-		<h1>Sign Up</h1>
+		<h1>Регистрация</h1>
 	</div>
 
 	<form
@@ -46,9 +46,18 @@
 		{/if}
 		<p>
 			<input
+				type="text"
+				name="name"
+				placeholder="Ваше имя"
+				class="input input-bordered w-full"
+				required
+			/>
+		</p>
+		<p>
+			<input
 				type="email"
 				name="email"
-				placeholder="Email..."
+				placeholder="Email"
 				class="input input-bordered w-full"
 				required
 				value={form?.email ?? ""}
@@ -58,24 +67,15 @@
 			<input
 				type="password"
 				name="password"
-				placeholder="Password..."
-				class="input input-bordered w-full"
-				required
-			/>
-		</p>
-		<p>
-			<input
-				type="password"
-				name="password-confirm"
-				placeholder="Confirm password..."
+				placeholder="Пароль"
 				class="input input-bordered w-full"
 				required
 			/>
 		</p>
 		<p class="flex items-center gap-6 mt-6">
-			<button class="btn btn-primary">Sign Up</button>
-			or
-			<a href="/login" class="link">Log In</a>
+			<button class="btn btn-primary">Зарегестрироваться</button>
+			или
+			<a href="/login" class="link">Залогиниться</a>
 		</p>
 	</form>
 

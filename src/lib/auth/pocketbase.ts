@@ -1,134 +1,106 @@
 import debug from "debug";
 import { err, ok, ResultAsync } from "neverthrow";
-import type { User as PocketBaseUser } from "pocketbase";
+import Cookies from "js-cookie";
 
 const log = debug("app:lib:auth:pocketbase");
 
 const POCKETBASE_API_URL = "http://127.0.0.1:8080";
 
 export const pocketbase: AuthAdapter = {
-	async login({ email, password }) {
-		// TODO: add Zod
-		const resp = await pocketbase_request<LoginResponse>({
-			path: "/login",
-			method: "POST",
-			body: { email, password },
-			fallback_error_message: "error logging in",
-		});
+  async login({ email, password }) {
+    // TODO: add Zod
+    const resp = await pocketbase_request<LoginResponse>({
+      path: "/login",
+      method: "POST",
+      body: { email, password },
+      fallback_error_message: "error logging in",
+    });
 
-		log("[login] resp:", resp);
+    log("[login] resp:", resp);
 
-		if (resp.isErr()) return err(resp.error);
-		if (!("user" in resp.value))
-			return err(new Error(resp.value?.message ?? "no user found"));
+    if (resp.isErr()) return err(resp.error);
 
-		const { user, token } = resp.value;
+    const { accessToken, message } = resp.value;
 
-		log("[login] user:", user);
+    if (message) return err(message);
 
-		return ok({ ...user, token });
-	},
+    Cookies.set("accessToken", accessToken);
 
-	async signup({ email, password, password_confirm }) {
-		// TODO: add Zod
-		const resp = await pocketbase_request<SignupResponse>({
-			path: "/users",
-			method: "POST",
-			body: { email, password, passwordConfirm: password_confirm },
-			fallback_error_message: "error logging in",
-		});
+    return ok({ token: accessToken });
+  },
 
-		log("[signup] resp:", resp);
+  async signup({ email, password, name }) {
+    if (!name) return err("Not Name");
 
-		if (resp.isErr()) return err(resp.error);
+    // TODO: add Zod
+    const resp = await pocketbase_request<SignupResponse>({
+      path: "/signup",
+      method: "POST",
+      body: { email, password, name },
+      fallback_error_message: "error logging in",
+    });
 
-		if ("message" in resp.value)
-			return err(new Error(resp.value.message ?? "unknown signup error"));
+    log("[signup] resp:", resp);
 
-		const user = resp.value;
+    if (resp.isErr()) return err(resp.error);
 
-		if (!("id" in user) || !("email" in user))
-			return err(new Error("no user found"));
+    const { accessToken, message } = resp.value;
 
-		log("[signup] signed up user:", user);
+    if (message) return err(message);
 
-		return ok(user);
-	},
+    Cookies.set("accessToken", accessToken);
 
-	async validate_session({ token }) {
-		// TODO: add Zod
-		const [user_id, session_token] = token.split(":");
+    return ok({ token: accessToken });
+  },
 
-		log("[validate_session] id:", user_id);
-		// log("[validate_session] token:", session_token);
-
-		const resp = await pocketbase_request<PocketBaseUser>({
-			path: `/users/${user_id}`,
-			headers: { Authorization: "User " + session_token },
-		});
-
-		log("[validate_session] resp:", resp);
-
-		if (resp.isErr()) return err(resp.error);
-
-		const user = resp.value;
-		if (!user) return err(new Error("no user found"));
-
-		log("[validate_session] user:", user);
-
-		return ok(user);
-	},
-
-	async logout() {
-		// This is a non-op because PocketBase doesn't have a logout endpoint.
-		// since it uses JWTs.
-		return;
-	},
+  async logout() {
+    // This is a non-op because PocketBase doesn't have a logout endpoint.
+    // since it uses JWTs.
+    return;
+  },
 };
 
 async function pocketbase_request<T>({
-	path,
-	method = "GET",
-	body = null,
-	headers = {},
-	fallback_error_message = "unknown error",
+  path,
+  method = "GET",
+  body = null,
+  headers = {},
+  fallback_error_message = "unknown error",
 }: {
-	path: string;
-	method?: string;
-	body?: any;
-	headers?: any;
-	fallback_error_message?: string;
+  path: string;
+  method?: string;
+  body?: any;
+  headers?: any;
+  fallback_error_message?: string;
 }) {
-	const url = POCKETBASE_API_URL + path;
+  const url = POCKETBASE_API_URL + path;
 
-	log("url:", url);
+  log("url:", url);
 
-	const init: RequestInit = {
-		method,
-		...(body ? { body: JSON.stringify(body) } : {}),
-		headers: { ...headers, "Content-Type": "application/json" },
-	};
+  const init: RequestInit = {
+    method,
+    ...(body ? { body: JSON.stringify(body) } : {}),
+    headers: { ...headers, "Content-Type": "application/json" },
+  };
 
-	log("init:", init);
+  log("init:", init);
 
-	const request = fetch(url, init).then((r) => r.json());
+  const request = fetch(url, init).then((r) => r.json());
 
-	return ResultAsync.fromPromise<T, Error>(
-		request,
-		() => new Error(fallback_error_message)
-	);
+  return ResultAsync.fromPromise<T, Error>(
+    request,
+    () => new Error(fallback_error_message)
+  );
 }
 
-interface ErrorResponse {
-	message?: string;
-	code?: number;
-}
+type SignupResponse = {
+  message?: string;
+  accessToken: string;
+  refreshToken: string;
+};
 
-type SignupResponse = PocketBaseUser | ErrorResponse;
-
-type LoginResponse =
-	| {
-			token: string;
-			user: PocketBaseUser;
-	  }
-	| ErrorResponse;
+type LoginResponse = {
+  message?: string;
+  accessToken: string;
+  refreshToken: string;
+};
