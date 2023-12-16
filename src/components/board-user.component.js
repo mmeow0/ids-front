@@ -13,7 +13,7 @@ export default class BoardUser extends Component {
   }
 
   componentDidMount() {
-    UserService.getUserBoard().then(
+    UserService.getPackets().then(
       response => {
         this.setState({
           content: response.data

@@ -11,7 +11,7 @@ class AuthService {
       })
       .then((response) => {
         if (response.data.accessToken) {
-          localStorage.setItem("user", JSON.stringify(response.data));
+          localStorage.setItem("access_token", response.data.accessToken);
         }
 
         return response.data;
@@ -19,19 +19,27 @@ class AuthService {
   }
 
   logout() {
-    localStorage.removeItem("user");
+    localStorage.removeItem("access_token");
   }
 
   register(username, email, password) {
-    return axios.post(API_URL + "signup", {
-      username,
-      email,
-      password,
-    });
+    return axios
+      .post(API_URL + "signup", {
+        name: username,
+        email,
+        password,
+      })
+      .then((response) => {
+        if (response.data.accessToken) {
+          localStorage.setItem("access_token", response.data.accessToken);
+        }
+
+        return response.data;
+      });
   }
 
-  getCurrentUser() {
-    return JSON.parse(localStorage.getItem("user"));
+  getAccessToken() {
+    return localStorage.getItem("access_token");
   }
 }
 
