@@ -46,8 +46,8 @@ export default class Profile extends Component {
               >
                 <p>Timestamp: {item.timestamp}</p>
                 <p>Длина пакета: {item.length}</p>
-                <p>MAC адрес отправителя: {item.srcMac}</p>
-                <p>MAC адрес получателя: {item.dstMac}</p>
+                <p>MAC адрес отправителя: {item.srcMAC}</p>
+                <p>MAC адрес получателя: {item.dstMAC}</p>
                 <p>IP адрес получателя: {item.srcIP}</p>
                 <p>IP адрес получателя: {item.dstIP}</p>
                 <p>Порт получателя: {item.srcPort}</p>
